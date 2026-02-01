@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "553685766235",
+    "project_id": "rekreativa-21ce6",
+    "storage_bucket": "rekreativa-21ce6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:553685766235:android:725aacc41c042230552f7e",
+        "android_client_info": {
+          "package_name": "com.example.rekreativa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjUG5yv25Z7TARbHZO0CS2dQ5c8jJyfY8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
