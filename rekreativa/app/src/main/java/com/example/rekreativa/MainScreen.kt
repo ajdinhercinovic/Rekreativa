@@ -21,7 +21,9 @@ data class BottomNavItem(
 
 @Composable
 fun MainScreen(
-){
+    onOpenTerenDetails: () -> Unit,
+    onLogout: () -> Unit
+) {
     var selectedTab by remember { mutableIntStateOf(0)}
     var openedTerenId by remember { mutableStateOf<String?>(null) }
 
@@ -86,7 +88,7 @@ fun MainScreen(
                 }
                 2 -> DogadjajiScreen()
                 3 -> TerminiScreen()
-                4 -> ProfilScreen()
+                4 -> ProfilScreen(onLogout = onLogout)
             }
         }
     }

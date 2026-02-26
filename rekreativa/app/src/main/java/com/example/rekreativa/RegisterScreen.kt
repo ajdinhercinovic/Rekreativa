@@ -19,20 +19,105 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.*
 import androidx.compose.material3.ExperimentalMaterial3Api
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
     onGoToLogin:() -> Unit,
+    onRegisterSuccess: () -> Unit
 ) {
     var birthDate by remember { mutableStateOf("") }
     var showDatePicker by remember { mutableStateOf(false) }
 
-    // UI-only state (za TextField)
     var fullName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
+    var repeatPassword by remember { mutableStateOf("") }
+
+    val auth = remember { FirebaseAuth.getInstance() }
+    val db = remember { FirebaseFirestore.getInstance() }
+
+    var loading by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf<String?>(null) }
+
+    fun splitName(fullName: String): Pair<String, String> {
+        val parts = fullName.trim().split(Regex("\\s+"))
+        if (parts.isEmpty()) return "" to ""
+        val ime = parts.first()
+        val prezime = if (parts.size >= 2) parts.drop(1).joinToString(" ") else ""
+        return ime to prezime
+    }
+
+    fun onRegisterClick() {
+
+        error = null
+
+        val (ime, prezime) = splitName(fullName)
+        if (ime.isBlank() || prezime.isBlank()) {
+            error = "Unesi i ime i prezime."
+            return
+        }
+
+        if (email.isBlank()) {
+            error = "Unesi email."
+            return
+        }
+
+        if (password.length < 6) {
+            error = "Lozinka mora imati najmanje 6 karaktera."
+            return
+        }
+
+        if (password != repeatPassword) {
+            error = "Lozinke se ne poklapaju."
+            return
+        }
+
+        loading = true
+
+        auth.createUserWithEmailAndPassword(email.trim(), password)
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    loading = false
+                    error = task.exception?.localizedMessage ?: "Registracija nije uspjela."
+                    return@addOnCompleteListener
+                }
+
+                val uid = auth.currentUser?.uid
+                if (uid == null) {
+                    loading = false
+                    error = "Greška: UID nije dostupan."
+                    return@addOnCompleteListener
+                }
+
+                val username = "${ime}_${prezime}_${uid.take(6)}".lowercase()
+
+                val userDoc = mapOf(
+                    "username" to username,
+                    "ime" to ime,
+                    "prezime" to prezime,
+                    "email" to email.trim(),
+                    "datumRodjenja" to birthDate.trim(),
+                    "avatarIndex" to 1,
+                    "createdAt" to System.currentTimeMillis()
+                )
+
+                db.collection("users").document(uid).set(userDoc)
+                    .addOnSuccessListener {
+                        loading = false
+                        onRegisterSuccess()
+                    }
+                    .addOnFailureListener { e ->
+                        auth.currentUser?.delete()
+                            ?.addOnCompleteListener {
+                                loading = false
+                                error = "Greška pri spremanju profila. Pokušaj ponovo."
+                            }
+                    }
+            }
+    }
 
     Column(
         modifier = Modifier
@@ -72,7 +157,6 @@ fun RegisterScreen(
                 .padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            // koristiš tvoj custom RekreativaTextField (sa ikonama)
             RekreativaTextField(
                 value = fullName,
                 onValueChange = { fullName = it },
@@ -102,8 +186,8 @@ fun RegisterScreen(
             )
 
             RekreativaTextField(
-                value = confirmPassword,
-                onValueChange = { confirmPassword = it },
+                value = repeatPassword,
+                onValueChange = { repeatPassword = it },
                 label = "Ponovi lozinku",
                 leadingIcon = Icons.Filled.Lock,
                 isPassword = true
@@ -114,10 +198,11 @@ fun RegisterScreen(
 
         // DUGME
         RekreativaImageButton(
-            text = "REGISTRUJ SE",
-            onClick = { /* */ },
+            text = if (loading) "..." else "REGISTRUJ SE",
+            onClick = { onRegisterClick() },
             modifier = Modifier.padding(horizontal = 90.dp)
         )
+        if (error != null) Text(error!!, color = MaterialTheme.colorScheme.error)
 
         Spacer(Modifier.height(16.dp))
 

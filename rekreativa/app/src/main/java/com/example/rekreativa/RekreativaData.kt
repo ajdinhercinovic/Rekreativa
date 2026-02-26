@@ -48,7 +48,6 @@ object RekreativaData {
         ime = "Ajdin",
         prezime = "Herčinović",
         email = "ajdinhercinovic03@gmail.com",
-        telefon = "+387 61 433-220",
         datumRodjenja = "22.04.2003",
         avatarRes = R.drawable.ajdin_avatar
     )
@@ -59,7 +58,6 @@ object RekreativaData {
             prezime = "Hercinovic",
             avatarRes = R.drawable.ajdin_avatar,
             email = "ajdinhercinovic03@gmail.com",
-            telefon = "+387 61 433-220",
             datumRodjenja = "22.04.2003"
         ),
         User(
@@ -68,7 +66,6 @@ object RekreativaData {
             prezime = "Dzumhur",
             avatarRes = R.drawable.damir_avatar,
             email = "damirdzzumhur@gmail.com",
-            telefon = "+387 61 234-245",
             datumRodjenja = "19.03.1995"
         ),
         User(
@@ -77,7 +74,6 @@ object RekreativaData {
             prezime = "Softić",
             avatarRes = R.drawable.avatar_kenan,
             email = "kenosoft@gmail.com",
-            telefon = "+387 61 623 311",
             datumRodjenja = "12.06.2004"
         ),
         User(
@@ -86,7 +82,6 @@ object RekreativaData {
             prezime = "Hasić",
             avatarRes = R.drawable.avatar_kenan,
             email = "ajdinhercinovic03@gmail.com",
-            telefon = "+387 61 123-220",
             datumRodjenja = "15.08.2003"
         )
     )

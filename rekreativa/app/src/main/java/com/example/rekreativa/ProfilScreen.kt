@@ -25,9 +25,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.rekreativa.ui.theme.RekreativaBlue
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun ProfilScreen() {
+fun ProfilScreen(
+    onLogout: () -> Unit
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -46,7 +49,7 @@ fun ProfilScreen() {
             ProfileInfoCard(
                 user = RekreativaData.currentUser,
                 sports = RekreativaData.mySports,
-                onEditProfile = {}
+                onEditProfile = {},
             )
             Spacer(Modifier.height(14.dp))
         }
@@ -54,6 +57,33 @@ fun ProfilScreen() {
         item {
             RatingStatsCard(stats = RekreativaData.myStats)
             Spacer(Modifier.height(14.dp))
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = "Ne želiš više koristiti ovaj nalog?",
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF6B7280)
+                )
+                RekreativaImageButton(
+                    text = "ODJAVI SE",
+                    onClick = {
+                        FirebaseAuth.getInstance().signOut()
+                        onLogout()
+                    },
+                    modifier = Modifier
+                        .width(160.dp)
+                        .height(36.dp)
+                )
+            }
         }
     }
 }
@@ -124,8 +154,6 @@ fun ProfileInfoCard(
                 horizontalArrangement = Arrangement.Center
             ) {
                 InfoField(label = "USERNAME", "@${user.username}", modifier = Modifier.weight(1f))
-                Spacer(Modifier.width(10.dp))
-                InfoField(label = "BROJ MOBITELA", value = user.telefon, modifier = Modifier.weight(1f))
                 Spacer(Modifier.width(10.dp))
                 InfoField(label = "DATUM ROĐENJA", value = user.datumRodjenja, modifier = Modifier.weight(1f))
             }

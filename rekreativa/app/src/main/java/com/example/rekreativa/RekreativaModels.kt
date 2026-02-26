@@ -74,7 +74,6 @@ data class User(
     val ime: String,
     val prezime: String,
     val email: String,
-    val telefon: String,
     val datumRodjenja: String,
     @DrawableRes val avatarRes: Int
 )

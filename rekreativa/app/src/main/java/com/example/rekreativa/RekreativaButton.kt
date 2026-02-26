@@ -121,3 +121,59 @@ fun RekreativaReservationButton(
     }
 }
 
+@Composable
+fun RekreativaLoginButton(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    textSize: TextUnit = 14.sp,
+    isLoading: Boolean = false,
+    enabled: Boolean = true
+) {
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(42.dp)
+            .shadow(
+                elevation = 10.dp,
+                shape = RoundedCornerShape(24.dp),
+                clip = false
+            )
+            .clip(RoundedCornerShape(24.dp))
+            .clickable(
+                enabled = enabled && !isLoading
+            ) { onClick() }
+    ) {
+
+        Image(
+            painter = painterResource(id = R.drawable.pozadina_h),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,
+            alpha = if (enabled) 1f else 0.6f
+        )
+
+        if (isLoading) {
+            Row(
+                modifier = Modifier.align(Alignment.Center),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(18.dp),
+                    strokeWidth = 2.dp,
+                    color = Color.White
+                )
+            }
+        } else {
+            Text(
+                text = text,
+                fontSize = textSize,
+                modifier = Modifier.align(Alignment.Center),
+                color = Color.White,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
+
+
