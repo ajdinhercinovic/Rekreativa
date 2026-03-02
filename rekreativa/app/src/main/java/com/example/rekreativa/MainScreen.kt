@@ -11,6 +11,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.example.rekreativa.tereni.TerenDetailsScreen
+import com.example.rekreativa.tereni.TereniScreen
 import com.example.rekreativa.ui.theme.RekreativaBlue
 
 data class BottomNavItem(

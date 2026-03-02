@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.rekreativa.ui.theme.RekreativaBorderFocused
@@ -40,6 +41,7 @@ import com.example.rekreativa.ui.theme.RekreativaTextGray
         Text(
             text = text,
             color = txt,
+            textAlign = TextAlign.Center,
             fontWeight = FontWeight.ExtraBold,
             fontSize = 12.sp,
             modifier = Modifier.padding(horizontal = 14.dp, vertical = 6.dp)

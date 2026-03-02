@@ -8,6 +8,17 @@ data class Sport(
     @DrawableRes val iconRes: Int
 )
 
+data class Field(
+    val id: String = "",
+    val name: String = "",
+    val city: String = "",
+    val sportIds: List<String> = emptyList(),
+    val recommendedPeople: String = "",
+    val imageUrl: String = "",
+    val isActive: Boolean = true,
+    val pricePerHour: String = ""
+)
+
 data class Teren(
     val id: String,
     val naziv: String,
@@ -18,6 +29,20 @@ data class Teren(
     val preporucenoOsoba: String
 )
 
+/*data class Reservation(
+    val id: String = "",
+    val userId: String = "",
+    val terenId: String = "",
+    val terenName: String = "",
+    val sportId: String = "",
+    val date: String = "",
+    val dayOfWeek: String = "",
+    val timeFrom: String = "",
+    val timeTo: String = "",
+    val tip_dogadjaja: String = "",
+    val tip_rezervacije: String = "",
+    val status: String = "PENDING"
+)*/
 enum class DogadjajTip { REKREACIJA, TRENING, TURNIR}
 enum class PristupTip { OTVOREN, ZAHTJEV }
 

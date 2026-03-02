@@ -21,11 +21,11 @@ fun DogadjajiScreen() {
     val tereni = RekreativaData.tereni
     val dogadjajiAll = RekreativaData.dogadjaji
 
-    var selectedSports by remember { mutableStateOf(setOf<String>()) }
+    var selectedSportId by remember { mutableStateOf<String?>(null) }
     var search by remember { mutableStateOf("") }
     var onlyFriends by remember { mutableStateOf(false) }
 
-    val filtered = remember(search, selectedSports, onlyFriends) {
+    /*val filtered = remember(search, selectedSports, onlyFriends) {
         dogadjajiAll
             .asSequence()
             .filter { selectedSports.isEmpty() || it.sportId in selectedSports }
@@ -39,7 +39,7 @@ fun DogadjajiScreen() {
             }
             .filter { d -> if (!onlyFriends) true else d.organizatorIme != "Rekreativa tim" }
             .toList()
-    }
+    }*/
 
 
     LazyColumn(
@@ -68,8 +68,8 @@ fun DogadjajiScreen() {
 
         item {
             HorizontalSportFilter(
-                selectedSports = selectedSports,
-                onSelectedSportsChange = { selectedSports = it }
+                selectedSportId = selectedSportId,
+                onSelectedSportChange = { selectedSportId = it }
             )
         }
 
@@ -111,7 +111,7 @@ fun DogadjajiScreen() {
             Spacer(Modifier.height(14.dp))
         }
 
-        items(filtered, key = { it.id }) { dogadjaj ->
+        /*items(filtered, key = { it.id }) { dogadjaj ->
             val teren = tereni.firstOrNull { it.id == dogadjaj.lokacijaTerenId }
             val sport = sports.firstOrNull { it.id == dogadjaj.sportId }
 
@@ -120,9 +120,9 @@ fun DogadjajiScreen() {
                 terenNaziv = teren?.naziv ?: "Nepoznata lokacija",
                 sportNaziv = sport?.naziv ?: "Sport",
                 sportIconRes = sport?.iconRes,
-                onAction = { /* */ }
+                onAction = { *//* *//* }
             )
-        }
+        }*/
 
         item { Spacer(Modifier.height(16.dp)) }
     }

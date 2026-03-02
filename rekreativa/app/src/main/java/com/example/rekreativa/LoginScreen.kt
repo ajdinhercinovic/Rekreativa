@@ -46,6 +46,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.text.TextStyle
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthException
 import kotlinx.coroutines.launch
 
 @Composable
@@ -60,49 +61,40 @@ fun LoginScreen(
     var password by remember { mutableStateOf("") }
 
     var loading by remember { mutableStateOf(false) }
-    var error by remember { mutableStateOf<String?>(null) }
 
     val auth = remember { FirebaseAuth.getInstance() }
 
     fun onLoginClick() {
-        error = null
-
         val e = email.trim()
         val p = password
 
         if (e.isBlank()) {
-            scope.launch {
-                snackbarHostState.showSnackbar("Unesi email.")
-            }
+            scope.launch { snackbarHostState.showSnackbar("Unesi email.") }
             return
         }
         if (p.isBlank()) {
-            scope.launch {
-                snackbarHostState.showSnackbar("Unesi lozinku.")
-            }
+            scope.launch { snackbarHostState.showSnackbar("Unesi lozinku.") }
             return
         }
-
+        if (loading) return
         loading = true
 
-        try {
-            auth.signInWithEmailAndPassword(e, p)
-                .addOnCompleteListener { task ->
-                    loading = false
-                    if (task.isSuccessful) {
-                        onLoginSucces()
-                    } else {
-                        scope.launch {
-                            snackbarHostState.showSnackbar(
-                                task.exception?.localizedMessage ?: "Neuspješna prijava."
-                            )
-                        }
-                    }
+        auth.signInWithEmailAndPassword(e, p)
+            .addOnCompleteListener { task ->
+                loading = false
+
+                if (task.isSuccessful) {
+                    onLoginSucces()
+                    return@addOnCompleteListener
                 }
-        } catch (ex: Exception) {
-            loading = false
-            error = ex.localizedMessage ?: "Greška pri prijavi."
-        }
+
+                val message = when (val ex = task.exception) {
+                    is FirebaseAuthException -> ex.toBosnianMessage()
+                    else -> "Neuspješna prijava. Pokušaj ponovo."
+                }
+
+                scope.launch { snackbarHostState.showSnackbar(message) }
+            }
     }
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
@@ -177,13 +169,7 @@ fun LoginScreen(
                         onClick = { onLoginClick() },
                         modifier = Modifier.padding(horizontal = 90.dp)
                     )
-                    if (error != null) {
-                        Spacer(modifier = Modifier.height(10.dp))
-                        Text(
-                            text = error!!,
-                            color = MaterialTheme.colorScheme.error
-                        )
-                    }
+
                     Spacer(Modifier.height(40.dp))
 
                     Text(
